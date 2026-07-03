@@ -4,15 +4,16 @@ import { middleware } from "./middleware.js"
 import { JWT_SECRET } from "@repo/backend-common/config"
 import { CreateRoomSchema, CreateUserSchema, SigninSchema } from "@repo/common/types"
 import { prisma } from "@repo/db"
+import "dotenv/config"
 
 const app = express()
 app.use(express.json())
 app.get("/", async (req, res) => {
   console.log(prisma)
-  //   const data = await prisma.user.findFirst()
-  //   res.status(200).json({
-  //     msg: data?.email
-  //   })
+  const data = await prisma.user.findFirst()
+  res.status(200).json({
+    msg: data?.email
+  })
 })
 app.post("/signup", async (req, res) => {
 
