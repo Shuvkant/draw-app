@@ -4,6 +4,7 @@ import { middleware } from "./middleware.js";
 import { JWT_SECRET } from "@repo/backend-common/config";
 import { CreateRoomSchema, CreateUserSchema, SigninSchema } from "@repo/common/types";
 import { prisma } from "@repo/db";
+import bcrypt from "bcrypt"
 
 const app = express();
 app.use(express.json());
@@ -21,12 +22,13 @@ app.post("/signup", async (req, res) => {
       msg: "Invalid format ",
     });
   }
+  const hashedPassword = await bcrypt.hash(parsedSignup.data?.password, 5)
   try {
     const data = await prisma.user.create({
       data: {
         name: parsedSignup.data?.name,
         email: parsedSignup.data?.email,
-        password: parsedSignup.data?.password,
+        password: hashedPassword,
         photo: parsedSignup.data?.photo,
       },
     });
@@ -57,18 +59,32 @@ app.post("/signin", async (req, res) => {
   }
   const user = await prisma.user.findFirst({
     where: {
-      email: parsedSignin.data?.email,
-      password: parsedSignin.data?.password
+      email: parsedSignin.data?.email
     },
   })
-  //@ts-ignore
-  const userId = user.id;
+  if (!user) {
+    return res.status(411).json({
+      msg: "User does not exist"
+    })
+  }
+  const paswordMatch = await bcrypt.compare(parsedSignin.data?.password, user.password)
+  console.log(paswordMatch)
+  if (!paswordMatch) {
+    return res.status(411).json({
+      msg: "Password Incorrect"
+    })
+  }
+  else {
 
-  const token = jwt.sign({ userId }, JWT_SECRET);
-  res.status(200).json({
-    userId: userId,
-    token: token,
-  });
+    const userId = user.id;
+
+    const token = jwt.sign({ userId }, JWT_SECRET);
+    res.status(200).json({
+      userId: userId,
+      token: token,
+    });
+  }
+  //@ts-ignore
 });
 
 app.post("/room", middleware, async (req, res) => {
