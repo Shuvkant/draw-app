@@ -88,7 +88,6 @@ app.post("/signin", async (req, res) => {
 });
 
 app.post("/room", middleware, async (req, res) => {
-  console.log("control to rooom")
   const parsedRoom = CreateRoomSchema.safeParse(req.body);
   if (!parsedRoom.success) {
     return res.status(411).json({
@@ -98,6 +97,11 @@ app.post("/room", middleware, async (req, res) => {
   try {
     //@ts-ignore
     const userId = req.userId
+    const userFinding = await prisma.user.findFirst({
+      where: {
+        id: userId
+      }
+    })
     const room = await prisma.room.create({
       data: {
         slug: parsedRoom.data?.name,
@@ -105,7 +109,8 @@ app.post("/room", middleware, async (req, res) => {
       }
     })
     res.status(200).json({
-      roomId: room.id
+      roomId: room.id,
+      email: userFinding?.email
     })
   } catch (error) {
     return res.status(200).json({
@@ -113,6 +118,27 @@ app.post("/room", middleware, async (req, res) => {
     })
   }
 });
+app.get("/chats/:roomId", middleware, async (req, res) => {
+  try {
+
+    const roomId = Number(req.params.roomId)
+    const messages = await prisma.chat.findMany({
+      where: {
+        roomId: roomId
+      }, orderBy: {
+        id: "desc"
+      }, take: 50
+    })
+    res.status(200).json({
+      msg: messages
+    })
+  } catch (error) {
+    return res.status(403).json({
+      msg: "Error while fetching messages"
+    })
+
+  }
+})
 app.listen(3000, () => {
   console.log("Server started  at port 3000");
 });
