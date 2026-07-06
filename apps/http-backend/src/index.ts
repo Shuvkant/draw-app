@@ -5,6 +5,7 @@ import { JWT_SECRET } from "@repo/backend-common/config";
 import { CreateRoomSchema, CreateUserSchema, SigninSchema } from "@repo/common/types";
 import { prisma } from "@repo/db";
 import bcrypt from "bcrypt"
+const PORT = 3001
 
 const app = express();
 app.use(express.json());
@@ -118,7 +119,7 @@ app.post("/room", middleware, async (req, res) => {
     })
   }
 });
-app.get("/chats/:roomId", middleware, async (req, res) => {
+app.get("/chats/:roomId", async (req, res) => {
   try {
 
     const roomId = Number(req.params.roomId)
@@ -130,7 +131,7 @@ app.get("/chats/:roomId", middleware, async (req, res) => {
       }, take: 50
     })
     res.status(200).json({
-      msg: messages
+      messages
     })
   } catch (error) {
     return res.status(403).json({
@@ -139,6 +140,17 @@ app.get("/chats/:roomId", middleware, async (req, res) => {
 
   }
 })
-app.listen(3000, () => {
-  console.log("Server started  at port 3000");
+app.get("/room/:slug", async (req, res) => {
+  const slug = String(req.params.slug)
+  const room = await prisma.room.findFirst({
+    where: {
+      slug
+    }
+  })
+  return res.status(200).json({
+    room
+  })
+})
+app.listen(PORT, () => {
+  console.log(`Server started  at port ${PORT}`);
 });
