@@ -1,27 +1,25 @@
-import axios from "axios"
-import { BACKEND_URL } from "../../config"
-import { ChatRoom } from "../../../components/ChatRoom"
-
-
-
-
+import axios from 'axios'
+import { BACKEND_URL } from '../../config'
+import { ChatRoom } from '../../../components/ChatRoom'
 
 async function getRoomId(slug: string) {
   const response = await axios.get(`${BACKEND_URL}/room/${slug}`)
-  return response.data.id
-  alert(response.data.id)
+  console.log(response)
+  return response.data.room.id
 }
 export default async function ChatRoom1({
-  params
+  params,
 }: {
   params: {
     slug: string
   }
 }) {
-  const slug = params.slug
+  const { slug } = await params
   const roomId = await getRoomId(slug)
   console.log(roomId)
 
-  return <ChatRoom id={roomId}>
-  </ChatRoom>
+  return <ChatRoom id={roomId}></ChatRoom>
+  return <div>
+    <p>shuvkant</p>
+  </div>
 }

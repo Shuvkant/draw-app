@@ -48,41 +48,48 @@ wss.on("connection", function (ws, request) {
     rooms: [],
     ws
   })
+  try {
 
-  ws.on("message", async function (data) {
-    const parsedData = JSON.parse(data as unknown as string)
-    if (parsedData.type == "join_room") {
-      const user = users.find(x => x.ws === ws)
-      user?.rooms.push(parsedData.roomId)
-    }
-    if (parsedData.type == "leave_room") {
-      const user = users.find(x => x.ws === ws)
-      if (!user) {
-        return
+    ws.on("message", async function (data) {
+      const parsedData = JSON.parse(data as unknown as string)
+      if (parsedData.type == "join_room") {
+        const user = users.find(x => x.ws === ws)
+        user?.rooms.push(parsedData.roomId)
       }
-      user.rooms = user?.rooms.filter(x => x === parsedData.room)
-
-    }
-    if (parsedData.type === "chat") {
-      const roomId = parsedData.roomId
-      const message = parsedData.message
-      await prisma.chat.create({
-        data: {
-          roomId,
-          message,
-          userId
+      if (parsedData.type == "leave_room") {
+        const user = users.find(x => x.ws === ws)
+        if (!user) {
+          return
         }
-      })
-      users.forEach(user => {
-        if (user.rooms.includes(roomId)) {
-          user.ws.send(JSON.stringify({
-            type: "chat",
-            "message": message,
-            roomId
-          }))
-        }
-      })
+        user.rooms = user?.rooms.filter(x => x === parsedData.room)
 
-    }
-  })
+      }
+      if (parsedData.type === "chat") {
+        const roomId = parsedData.roomId
+        const message = parsedData.message
+        await prisma.chat.create({
+          data: {
+            roomId,
+            message,
+            userId
+          }
+        })
+        users.forEach(user => {
+          if (user.rooms.includes(roomId)) {
+            user.ws.send(JSON.stringify({
+              type: "chat",
+              "message": message,
+              roomId
+            }))
+          }
+        })
+
+      }
+    })
+
+  } catch (error) {
+
+    return null
+
+  }
 })
