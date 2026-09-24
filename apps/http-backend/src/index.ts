@@ -44,7 +44,7 @@ app.post("/signup", async (req, res) => {
       console.log(error.message);
 
       return res.status(500).json({
-        msg: `The ${parsedSignup.data?.email} already exists`,
+        msg: error.message,
       });
     } else {
       console.log("An unexpected error occurred:", error);
