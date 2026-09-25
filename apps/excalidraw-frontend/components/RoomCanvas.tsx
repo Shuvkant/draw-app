@@ -1,5 +1,4 @@
 "use client";
-
 import { WS_URL } from "@/config";
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from "./Canvas";
@@ -8,7 +7,7 @@ export function RoomCanvas({ roomId }: { roomId: string }) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    const ws = new WebSocket(`${WS_URL}?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3Njg0NDMwYy04YzNiLTRlZmQtOGFmNS00YzQwMzdmNjJkYzMiLCJpYXQiOjE3MzcyOTg2NjV9.xacFop0s231DoUVeLZormeIbBmIRaXftTVVI6weIqFo`)
+    const ws = new WebSocket(`${WS_URL}?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhMDNlZDgyMC0wODBkLTRjMmUtOTE0Mi0xYTczNjg0YjI0M2QiLCJpYXQiOjE3OTAzMTYzNjd9.sm9mmh8Ub9El-BZZ4pJio8zk1lzDCz-WbgVc8uXuNqA`)
 
     ws.onopen = () => {
       setSocket(ws);
