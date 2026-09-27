@@ -48,6 +48,7 @@ wss.on("connection", function (ws, request) {
     rooms: [],
     ws
   })
+  console.log("ws connection successful")
   try {
 
     ws.on("message", async function (data) {
@@ -55,6 +56,7 @@ wss.on("connection", function (ws, request) {
       if (parsedData.type == "join_room") {
         const user = users.find(x => x.ws === ws)
         user?.rooms.push(parsedData.roomId)
+        console.log(parsedData)
       }
       if (parsedData.type == "leave_room") {
         const user = users.find(x => x.ws === ws)
