@@ -6,7 +6,7 @@ export async function SignIn({ isSignin }: { isSignin: boolean }) {
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
   async function signup() {
-    const response = await axios.post("http://localhost:3000", {
+    const response = await axios.post("http://localhost:3001", {
       email,
       password,
       name
