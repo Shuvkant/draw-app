@@ -5,9 +5,10 @@ import { Canvas } from "./Canvas";
 
 export function RoomCanvas({ roomId }: { roomId: string }) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const authorization = localStorage.getItem("authorization")
 
   useEffect(() => {
-    const ws = new WebSocket(`${WS_URL}?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOWE5ZGQyMS1kZWU4LTQ3ZWUtYWU0Yy01ZGMxYjI3YTJhNzMiLCJpYXQiOjE3OTEwOTY0MDN9.USnItVUswqPuXgmMFcs9UvN4vNjNFtpXVZLe4CJq3mU`)
+    const ws = new WebSocket(`${WS_URL}?token=${authorization}`)
 
     ws.onopen = () => {
       setSocket(ws);

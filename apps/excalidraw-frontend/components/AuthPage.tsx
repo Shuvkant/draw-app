@@ -30,11 +30,23 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
           name,
         };
 
-      const response = await axios.post(endpoint, data);
+      if (isSignin) {
 
-      console.log("Success:", response.data);
+        const response = await axios.post(endpoint, data);
+        const authHeader = response.data.token
+        localStorage.setItem("authorization", authHeader)
+        console.log(authHeader)
 
-      router.push("/dashboard")
+
+        console.log("Success:", response.data);
+
+        router.push("/dashboard")
+
+      }
+      else {
+
+        router.push("/signin")
+      }
 
 
     } catch (error) {

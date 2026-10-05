@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { IconButton } from "./IconButton";
 import { Circle, Pencil, RectangleHorizontalIcon } from "lucide-react";
 import { Game } from "@/app/draw/game";
+import { useRouter } from "next/navigation";
 
 export type Tool = "circle" | "rect" | "pencil";
 
@@ -48,6 +49,11 @@ function Topbar({ selectedTool, setSelectedTool }: {
   selectedTool: Tool,
   setSelectedTool: (s: Tool) => void
 }) {
+
+  const router = useRouter()
+  const leaveRoom = () => {
+    router.push("/dashboard")
+  }
   return <div style={{
     position: "fixed",
     top: 10,
@@ -67,6 +73,7 @@ function Topbar({ selectedTool, setSelectedTool }: {
       <IconButton onClick={() => {
         setSelectedTool("circle")
       }} activated={selectedTool === "circle"} icon={<Circle />}></IconButton>
+      <button className="text-gray-200 border-2 rounded-2xl p-1 hover:text-teal-700" onClick={leaveRoom}>leave room</button>
     </div>
   </div>
 }

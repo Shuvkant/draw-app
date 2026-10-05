@@ -121,6 +121,27 @@ app.post("/room", middleware, async (req, res) => {
     })
   }
 });
+app.get("/rooms", middleware, async (req, res) => {
+  try {
+    //@ts-ignore
+    const userId = req.userId
+    const userFinding = await prisma.room.findMany({
+      where: {
+        adminId: userId
+      }
+    })
+    console.log(userFinding)
+    res.status(200).json({
+      msg: userFinding
+    })
+
+  } catch (error) {
+    res.status(203).json({
+      msg: error
+    })
+  }
+
+})
 app.get("/chats/:roomId", async (req, res) => {
   try {
 
