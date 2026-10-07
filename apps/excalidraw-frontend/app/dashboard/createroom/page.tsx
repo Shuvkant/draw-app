@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useState } from "react";
+import { HTTP_BACKEND } from "@/config";
 
 export default function CreateRoom() {
   const [room, setRoom] = useState("");
@@ -17,7 +18,7 @@ export default function CreateRoom() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/room",
+        `${HTTP_BACKEND}/room`,
         {
           name: room,
         },

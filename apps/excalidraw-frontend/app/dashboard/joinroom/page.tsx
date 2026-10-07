@@ -3,17 +3,23 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { HTTP_BACKEND } from "@/config";
+
+type Room = {
+  id: number;
+  slug: string;
+};
 
 export default function JoinRoom() {
   const router = useRouter();
-  const [room, setRoom] = useState([]);
+  const [room, setRoom] = useState<Room[]>([]);
 
   const joinRoom = async () => {
     try {
       const authorization = localStorage.getItem("authorization");
 
       const response = await axios.get(
-        "http://localhost:3001/rooms",
+        `${HTTP_BACKEND}/rooms`,
         {
           headers: {
             Authorization: authorization,

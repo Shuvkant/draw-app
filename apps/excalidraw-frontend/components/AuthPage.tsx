@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { HTTP_BACKEND } from "@/config";
 
 export function AuthPage({ isSignin }: { isSignin: boolean }) {
   const router = useRouter()
@@ -16,8 +17,8 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
 
     try {
       const endpoint = isSignin
-        ? "http://localhost:3001/signin"
-        : "http://localhost:3001/signup";
+        ? `${HTTP_BACKEND}/signin`
+        : `${HTTP_BACKEND}/signup`;
 
       const data = isSignin
         ? {
@@ -112,4 +113,3 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
     </div>
   );
 }
-

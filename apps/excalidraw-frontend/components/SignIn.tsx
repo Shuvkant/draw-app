@@ -1,12 +1,13 @@
 import axios from "axios"
 import { useState } from "react"
+import { HTTP_BACKEND } from "@/config"
 
 export async function SignIn({ isSignin }: { isSignin: boolean }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
   async function signup() {
-    const response = await axios.post("http://localhost:3001", {
+    const response = await axios.post(`${HTTP_BACKEND}/signin`, {
       email,
       password,
       name
